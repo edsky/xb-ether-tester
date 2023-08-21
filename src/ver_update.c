@@ -9,7 +9,7 @@
  */
 
 #include <windows.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <time.h>
 #include <wininet.h>
 #include <mmsystem.h>

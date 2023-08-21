@@ -12,6 +12,7 @@
 #include <tchar.h>     
 #include <stdio.h>
 #include "debug.h"
+#include <commdlg.h>
 
 int WinPrintf(HWND hwnd, TCHAR * szFormat, ...)
 {
@@ -198,10 +199,10 @@ int get_open_file_name(char *file_name, HWND hwnd, char *filter_str)
 int get_save_file_name(char *file_name, HWND hwnd, char *filter, char *ext)
 {
     TCHAR szFile[MAX_FILE_PATH_LEN]=TEXT("");
-    OPENFILENAME  Ofn;
+    OPENFILENAMEA  Ofn;
     
-    memset(&Ofn, 0, sizeof(OPENFILENAME));
-    Ofn.lStructSize = sizeof(OPENFILENAME); 
+    memset(&Ofn, 0, sizeof(OPENFILENAMEA));
+    Ofn.lStructSize = sizeof(OPENFILENAMEA); 
     Ofn.hwndOwner = hwnd; 
     
     Ofn.lpstrFilter = filter;
@@ -627,13 +628,20 @@ void h_arrange_win(HWND hleader, int nr_member, HWND hmembers[], int offset)
 void h_arrange_win_id(HWND hleader, int nr_member, int hmember_ids[], int offset)
 {
     int i;
-    HWND p=GetParent(hleader);
-    HWND hmembers[nr_member];
-    for (i=0;i<nr_member; i++)
+    HWND p = GetParent(hleader);
+
+    // Allocate the array dynamically
+    HWND* hmembers = (HWND*)malloc(nr_member * sizeof(HWND));
+    if (!hmembers) return;  // Check if allocation was successful
+
+    for (i = 0; i < nr_member; i++)
     {
-        hmembers[i]=GetDlgItem(p, hmember_ids[i]);
+        hmembers[i] = GetDlgItem(p, hmember_ids[i]);
     }
+
     h_arrange_win(hleader, nr_member, hmembers, offset);
+
+    free(hmembers);  // Free the allocated memory
 }
 
 void v_arrange_win(HWND hleader, int nr_member, HWND hmembers[], int offset)
@@ -651,13 +659,20 @@ void v_arrange_win(HWND hleader, int nr_member, HWND hmembers[], int offset)
 void v_arrange_win_id(HWND hleader, int nr_member, int hmember_ids[], int offset)
 {
     int i;
-    HWND p=GetParent(hleader);
-    HWND hmembers[nr_member];
-    for (i=0;i<nr_member; i++)
+    HWND p = GetParent(hleader);
+
+    // Dynamically allocate the array
+    HWND* hmembers = (HWND*)malloc(nr_member * sizeof(HWND));
+    if (!hmembers) return;  // Check for successful allocation
+
+    for (i = 0; i < nr_member; i++)
     {
-        hmembers[i]=GetDlgItem(p, hmember_ids[i]);
+        hmembers[i] = GetDlgItem(p, hmember_ids[i]);
     }
+    
     v_arrange_win(hleader, nr_member, hmembers, offset);
+
+    free(hmembers);  // Free the allocated memory
 }
 
 int a_include_b_right(HWND a, HWND b)

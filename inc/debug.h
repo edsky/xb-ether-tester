@@ -11,25 +11,29 @@
 #ifndef __DEBUG_H_
 #define __DEBUG_H_
 
+#include <tchar.h>
+
 #define WIDEN2(x) L ## x
 #define WIDEN(x) WIDEN2(x)
 #define __WFILE__ WIDEN(__FILE__)
 
+void __dbg_print(const TCHAR * szFormat, ...);
+void __dbg_print_w(const WCHAR * szFormat, ...);
 
-void __dbg_print_w(WCHAR * szFormat, ...);
-void __dbg_print(TCHAR * szFormat, ...);
-
-#define    dbg_print(fmt, args...) \
+// For narrow character debug printing
+#define dbg_print(fmt, ...) \
     do \
     { \
-        __dbg_print("DBG:%s(%d)-%s:\n"fmt"\n", __FILE__,__LINE__,__FUNCTION__,##args); \
+        __dbg_print(_T("DBG:%s(%d)-%s:\n") _T(fmt) _T("\n"), __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__); \
     } while (0)
 
-#define    dbg_print_w(fmt, args...) \
+// For wide character debug printing
+#define dbg_print_w(fmt, ...) \
     do \
     { \
-        __dbg_print_w(L"DBG:%s(%d):\n"fmt"\n", __WFILE__,__LINE__,,##args); \
+        __dbg_print_w(L"DBG:%ls(%d)-%ls:\n" L##fmt L"\n", __FILEW__, __LINE__, __FUNCTIONW__, __VA_ARGS__); \
     } while (0)
 
 #endif
+
 

@@ -8,7 +8,7 @@
  * ” œ‰: sunmingbao@126.com
  */
 #include <pcap.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include "common.h"
 #include "global_info.h"
 #include "res.h"

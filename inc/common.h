@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "defs.h"
+#include <winsock2.h>
 
 #define    ARRAY_SIZE(array_name)    (sizeof(array_name)/sizeof(array_name[0]))
 static inline int AskConfirmation(HWND hwnd, TCHAR *str, TCHAR *cap_str)

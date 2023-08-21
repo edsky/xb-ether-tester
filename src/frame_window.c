@@ -8,7 +8,8 @@
  * ” œ‰: sunmingbao@126.com
  */
 #include <windows.h>
-#include <sys/time.h>
+//#include <sys/time.h>
+#include <shellapi.h>
 #include "common.h"
 #include "global_info.h"
 #include "gui.h"

@@ -2276,7 +2276,7 @@ int make_frags_ipv4(const t_stream *pt_stream, int frag_data_len)
 
     cpy_stream(&t_stream_tmp, pt_stream);
     iph_frag=eth_data(t_stream_tmp.data);
-    p_frag_data=(void *)iph_frag + ip_hdr_len(iph);
+    p_frag_data=(uint8_t *)iph_frag + ip_hdr_len(iph);
     ret=delete_all_rule(&t_stream_tmp);
 
     t_stream_tmp.len = frag_frame_len;
@@ -2285,7 +2285,7 @@ int make_frags_ipv4(const t_stream *pt_stream, int frag_data_len)
     {
         iph_frag->frag_off =  ((1<<13) | frag_data_unit_num*i);
         iph_frag->frag_off = htons(iph_frag->frag_off);
-        memcpy(p_frag_data, p_ip_data+frag_data_len*i, frag_data_len);
+        memcpy(p_frag_data, (uint8_t*)p_ip_data+frag_data_len*i, frag_data_len);
         update_check_sum(&t_stream_tmp);
         add_stream(&t_stream_tmp);
     }
@@ -2293,7 +2293,7 @@ int make_frags_ipv4(const t_stream *pt_stream, int frag_data_len)
     iph_frag->tot_len = htons(t_stream_tmp.len - eth_len);
 
     iph_frag->frag_off = htons(frag_data_unit_num*i);
-    memcpy(p_frag_data, p_ip_data+frag_data_len*i, data_len-frag_data_len*i);
+    memcpy(p_frag_data, (uint8_t*)p_ip_data+frag_data_len*i, data_len-frag_data_len*i);
     update_check_sum(&t_stream_tmp);
     add_stream(&t_stream_tmp);
     return ret;
@@ -2320,7 +2320,7 @@ int make_frags_ipv6(const t_stream *pt_stream, int frag_data_len)
 
     cpy_stream(&t_stream_tmp, pt_stream);
     ip6h_frag=eth_data(t_stream_tmp.data);
-    p_frag_data= (void *)ip6h_frag + IPV6_HDR_LEN;
+    p_frag_data= (void *)((uint8_t*)ip6h_frag + IPV6_HDR_LEN);
     ret=delete_all_rule(&t_stream_tmp);
 
     t_stream_tmp.len = frag_frame_len;
@@ -2331,7 +2331,7 @@ int make_frags_ipv6(const t_stream *pt_stream, int frag_data_len)
         t_ipv6_frag_hdr_tmp.frag_off =  (((frag_data_unit_num*i)<<3) | 1);
         t_ipv6_frag_hdr_tmp.frag_off = htons(t_ipv6_frag_hdr_tmp.frag_off);
         memcpy(p_frag_data, &t_ipv6_frag_hdr_tmp, 8);
-        memcpy(p_frag_data+8, p_ip_data+frag_data_len*i, frag_data_len);
+        memcpy((uint8_t*)p_frag_data+8, (uint8_t*)p_ip_data+frag_data_len*i, frag_data_len);
         update_check_sum(&t_stream_tmp);
         add_stream(&t_stream_tmp);
     }
@@ -2341,7 +2341,7 @@ int make_frags_ipv6(const t_stream *pt_stream, int frag_data_len)
 
     t_ipv6_frag_hdr_tmp.frag_off = htons((frag_data_unit_num*i)<<3);
     memcpy(p_frag_data, &t_ipv6_frag_hdr_tmp, 8);
-    memcpy(p_frag_data+8, p_ip_data+frag_data_len*i, data_len-frag_data_len*i);
+    memcpy((uint8_t*)p_frag_data+8, (uint8_t*)p_ip_data+frag_data_len*i, data_len-frag_data_len*i);
     update_check_sum(&t_stream_tmp);
     add_stream(&t_stream_tmp);
     return ret;

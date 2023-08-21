@@ -242,6 +242,8 @@ void * get_nic_FriendlyName(const char *name);
 
 #define    SND_MODE_CONTINUE    0
 #define    SND_MODE_BURST       1
+
+#pragma pack(push, 1)
 typedef struct
 {
     int32_t speed_type;
@@ -249,7 +251,7 @@ typedef struct
     int32_t snd_mode;
     int32_t snd_times_cnt;
     char rsv[32];
-} __attribute__((packed)) t_fc_cfg;
+} t_fc_cfg;
 extern t_fc_cfg  gt_fc_cfg;
 
 extern int snd_gap_s;
@@ -278,7 +280,7 @@ typedef struct
     int32_t filter_str_len;
     char rsv[32];
     char filter_str_usr[MAX_CAP_FILTER_STR_LEN];
-} __attribute__((packed)) t_pkt_cap_cfg;
+} t_pkt_cap_cfg;
 #define    PKT_CAP_CFG_FIX_LEN    ((unsigned long)(void *)(&(((t_pkt_cap_cfg *)NULL)->filter_str_usr)))
 
 extern t_pkt_cap_cfg  gt_pkt_cap_cfg;
@@ -301,9 +303,8 @@ typedef struct
 {
     uint32_t offset;
     uint32_t len;
-
-} __attribute__((packed)) t_data_seg_info;
-
+} t_data_seg_info;
+#pragma pack(pop)
 
 typedef struct
 {
